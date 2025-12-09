@@ -45,7 +45,7 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   console.log("📥 Incoming signin data:", req.body);
-
+  
   try {
     const { email, password } = req.body;
 
@@ -69,7 +69,7 @@ exports.signin = async (req, res) => {
     // generate JWT token
     const token = jwt.sign(
       { 
-        userId: user._id, 
+        uid: user._id,        // ← Changed from userId to uid
         email: user.email,
         shopName: user.shopName 
       },

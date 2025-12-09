@@ -1,6 +1,6 @@
 // const Order = require('../models/Order');
 // const Product = require('../models/Product');
-const Customer = require('../models/Users');
+const User = require('../models/Users');
 
 // Get dashboard stats
 // exports.getStats = async (req, res) => {
@@ -32,15 +32,29 @@ const Customer = require('../models/Users');
 // Get shop info
 exports.getShopInfo = async (req, res) => {
   try {
-    const User = require('../models/Users');
-    const user = await User.findById(req.user.userId);
-    
-    res.json({ 
+    // Get user ID from the verified token (set by authMiddleware)
+    const userId = req.user.uid;
+
+    // Find user in database
+    const user = await User.findById(userId).select('-password'); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return shop information
+    res.json({
       name: user.shopName,
-      owner: `${user.firstName} ${user.lastName}`,
-      email: user.email
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      telephone: user.telephone,
+      address: user.address
     });
+
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('❌ Error fetching shop info:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
