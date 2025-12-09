@@ -13,6 +13,7 @@ connectDB();
 
 app.use("/auth", authRoutes);
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/dashboard", require("./routes/dashboardRoutes"));
 
 app.get("/", (req, res) => res.send("API Working"));
 
